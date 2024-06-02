@@ -13,14 +13,15 @@ class DataTable {
         subsetColumns = selectedIndices.map(index => columns[index]);
     else
         subsetColumns= selectedIndices1.map(index=>columns[index]);
-    
         data.sort((a, b) => {
           let sorts=0;
+          let acsend=true;
           if(sort==='App'){
             sorts=0;
           }
           if(sort==='Android Ver'){
             sorts=12;
+            acsend=false;
           }
           if(sort==='Genres'){
             sorts=1;
@@ -34,20 +35,15 @@ class DataTable {
               bValue = +bValue;
           }
 
-          if (aValue < bValue) return true ? -1 : 1;
-          if (aValue > bValue) return true ? 1 : -1;
+          if (aValue < bValue) return acsend ? -1 : 1;
+          if (aValue > bValue) return acsend ? 1 : -1;
           return 0;
       });
-  
     let rows = d3.select(this.id).selectAll("tr").data(data).join("tr");
-
-   
-    this.anotherFunction(rows, subsetColumns);
+    this.populate(rows, subsetColumns);
     
   }
-  anotherFunction(rows, subsetColumns) {
-    
-    
+  populate(rows, subsetColumns) {
     rows
       .selectAll("td")
       .data((rowData) => subsetColumns.map((column) => rowData[column]))

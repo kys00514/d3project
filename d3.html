@@ -249,11 +249,10 @@
         let useFilter = d3.select("#use-color").property("checked");
         
   
-        scatterplot.update(xVar, yVar, "variety", useFilter);
+        scatterplot.update(xVar, yVar, useFilter);
 
 
       }
-
       function updateHistogram() {
         var selectElement = document.getElementById('options');
         var selectedValue = selectElement.value;
@@ -291,55 +290,32 @@
       }
       function updatepiegraph(){
         piegraph.update( brushedData && brushedData.length > 0 ? brushedData : data,
-          "Genres" , true);
+          "Genres");
       }
-
       const csvData = d3.csvParse(csvText);
-
-
-let uniqueDataMap = new Map(); 
-
-csvData.forEach((d) => {
-
-  d["Rating"] = +d["Rating"];
-  d["Installs"] = parseInt(d["Installs"].replace(/[^\d]/g, ""));
-  d["Price"] = +d["Price"].replace(/[^\d.]/g, "");
-  d["Size"] = +d["Size"].replace(/[^\d.]/g, "");
-
-  if (/^\d/.test(d["Android Ver"])) {
-    d["Android Ver"] = parseFloat(d["Android Ver"].match(/^\d+(\.\d+)?/)[0]);
-  } else {
-    d["Android Ver"] = 0;
-  }
-
-  d["Reviews"] = +d["Reviews"];
-
-
-  if (!uniqueDataMap.has(d["App"])) {
-
-    uniqueDataMap.set(d["App"], d);
-  }
-});
-
-
-
-
-let uniqueData = Array.from(uniqueDataMap.values());
-
-
-const columns = Object.keys(uniqueData[0]);
-
-
-data = uniqueData;
-
-data.columns = columns;
-
-
+      let uniqueDataMap = new Map(); 
+      csvData.forEach((d) => {
+      d["Rating"] = +d["Rating"];
+      d["Installs"] = parseInt(d["Installs"].replace(/[^\d]/g, ""));
+      d["Price"] = +d["Price"].replace(/[^\d.]/g, "");
+      d["Size"] = +d["Size"].replace(/[^\d.]/g, "");
+      if (/^\d/.test(d["Android Ver"])) {
+        d["Android Ver"] = parseFloat(d["Android Ver"].match(/^\d+(\.\d+)?/)[0]);
+      } else {
+        d["Android Ver"] = 0;
+      }
+      d["Reviews"] = +d["Reviews"];
+      if (!uniqueDataMap.has(d["App"])) {
+        uniqueDataMap.set(d["App"], d);
+      }
+      });
+      let uniqueData = Array.from(uniqueDataMap.values());
+      const columns = Object.keys(uniqueData[0]);
+      data = uniqueData;
+      data.columns = columns;
       scatterplot = new Scatterplot("#scatterplot", data);
       scatterplot.initialize();
-
       updateScatterplot();
-
       d3.selectAll("input[type=radio][name=x-encoding]").on(
         "change",
         updateScatterplot
@@ -352,31 +328,19 @@ data.columns = columns;
       d3.selectAll("#options").on("change", updateHistogram);
       d3.selectAll("#use-datatype").on("change",updateDataTable);
       d3.selectAll("#options1").on("change",updateDataTable);
- 
-
       scatterplot.on("brush", (brushedItems) => {
         brushedData = brushedItems;
         updateHistogram();
         updateDataTable();
         updatepiegraph();
       });
-
       histogram = new Histogram("#histogram");
       histogram.initialize();
-
       updateHistogram();
-
-     
-     
-    
-    
       piegraph=new piegraph("#piegraph");
-
       piegraph.initialize();
-      
       updatepiegraph();
       dataTable = new DataTable("#data-table");
-     
     </script>
 
     <script

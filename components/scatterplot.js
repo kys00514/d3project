@@ -62,31 +62,26 @@ class Scatterplot {
       });
   }
 
-  update(xVar, yVar, colorVar, useFilter) {
+  update(xVar, yVar, useFilter) {
     
-   this.useFilter=useFilter;
+    this.useFilter=useFilter;
     const formatNumber = (num) => {
       if (Math.abs(num) < 1) {
         return num.toFixed(1); 
       } else {
         let formatted;
-        
         if (num >= 1e9) {
           formatted = (num / 1e9).toFixed(1) + "B";
         } else if (num >= 1e6) {
-   
           formatted = num % 1e6 === 0 ? (num / 1e6).toFixed(0) + "M" : (num / 1e6).toFixed(1) + "M";
         } else if (num >= 1e3) {
           formatted = num % 1e3 === 0 ? (num / 1e3).toFixed(0) + "K" : (num / 1e3).toFixed(1) + "K";
         } else {
           formatted = num.toFixed(1);
         }
-    
-   
         if (formatted.endsWith('.0')) {
           formatted = formatted.slice(0, -2);
         }
-    
         return formatted;
       }
     };
@@ -117,14 +112,11 @@ class Scatterplot {
       .attr("cx", (d) => this.xScale(d[xVar]))
       .attr("cy", (d) => this.yScale(d[yVar]))
       .attr("fill", (d) =>
-       this.topGenres.includes(d.Genres)
+      this.topGenres.includes(d.Genres)
             ? this.zScale(d.Genres)
             : "black"
-          
       )
       .attr("r", 3);
-
-    
     this.xAxis
       .attr(
         "transform",
@@ -192,5 +184,5 @@ function convertVwToPx(value){
     const vw = parseFloat(value);
     return (vw / 100) * window.innerWidth;
   }
-  return value; 
+  return value;
 }

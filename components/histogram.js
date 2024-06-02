@@ -18,8 +18,7 @@ class Histogram {
             "Personalization",
             "Communication",
             "Lifestyle",
-          ];
-      
+        ];
     }
 
     initialize() {
@@ -40,18 +39,14 @@ class Histogram {
     }
 
     update(data,xVar,anotherFeature){
-     console.log(anotherFeature);
-     this.container.selectAll("*").remove();
-     this.xAxis.selectAll("*").remove();
-     this.yAxis.selectAll("*").remove();
-     this.legend.selectAll("*").remove();
-
- 
-        this.updateHistogram(data,xVar)
-   
+    console.log(anotherFeature);
+    this.container.selectAll("*").remove();
+    this.xAxis.selectAll("*").remove();
+    this.yAxis.selectAll("*").remove();
+    this.legend.selectAll("*").remove();
+    this.updateHistogram(data,xVar)
     }
     updateHistogram(data, xVar) {
-     
     const counts = {};
     data.forEach(d => {
         if (!isNaN(d[xVar])) {
@@ -74,9 +69,6 @@ class Histogram {
             }
         }
     });
-
-
-
     const categories = Object.keys(counts).map(Number).sort((a, b) => a - b);
     const countsArray = categories.map(category => counts[category]);
 
@@ -93,13 +85,12 @@ class Histogram {
         .attr("width", this.xScale.bandwidth())
         .attr("height", d => this.height - this.yScale(counts[d]))
         .attr("fill", "lightgray");
-
-  
     this.xAxis
         .attr("transform", `translate(${this.margin.left}, ${this.margin.top + this.height})`)
         .call(d3.axisBottom(this.xScale).tickFormat(d => {
-          
-            if (d > 1000) {
+            if (d >= 1000000) {
+                return `${d / 1000000}M`;
+            } else if (d >= 1000) {
                 return `${d / 1000}k`;
             }
             return d;
@@ -109,20 +100,19 @@ class Histogram {
         .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
         .call(d3.axisLeft(this.yScale));
     }
-   
 }
 function convertVwToPx(value){
     if (typeof value === 'string' && value.endsWith('vw')) {
     const vw = parseFloat(value);
       return (vw / 100) * window.innerWidth;
     }
-    return value; 
+    return value;
 }
 function floorToNearestreview(number) {
     return Math.floor(number / 1000000) * 1000000;
 }
 function floorToNearestsize(number) {
-    return Math.floor(number / 100) * 100;
+    return Math.floor(number / 10) * 10;
 }
 function floorToNearestprice(number) {
     return Math.floor(number / 1) * 1;
